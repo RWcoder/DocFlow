@@ -23,7 +23,7 @@
       <RowConstraints />
       <RowConstraints />
     </rowConstraints>
-    <Button mnemonicParsing="false" onAction="#onCreatePDFClicked" prefHeight="35.0" prefWidth="123.0" text="Create PDF" GridPane.rowIndex="6" />
+    <Button fx:id="createPDFButton" mnemonicParsing="false" onAction="#onCreatePDFClicked" prefHeight="35.0" prefWidth="123.0" text="Create PDF" GridPane.rowIndex="6" />
     <ComboBox fx:id="fontPicker" onAction="#onFontPicked" prefHeight="25.0" prefWidth="210.0" GridPane.rowIndex="5" GridPane.columnSpan="2" />
     <Label text="Font" GridPane.rowIndex="4" GridPane.columnSpan="2" />
     <Button mnemonicParsing="false" onAction="#openFile" text="Choose File" GridPane.rowIndex="1" GridPane.columnSpan="2" />

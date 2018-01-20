@@ -4,9 +4,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
 import javafx.stage.FileChooser;
 
 import java.awt.*;
@@ -15,6 +15,7 @@ import java.io.IOException;
 
 public class Controller {
 
+    public Button createPDFButton;
     public ComboBox<Integer> fontSizePicker;
     public ComboBox<String> fontPicker;
     public Label fileLabel;
@@ -25,6 +26,7 @@ public class Controller {
     @FXML
     private void initialize() {
         pdfService = new PDFCreationService();
+        pdfService.setOnSucceeded(success -> onPDFCompileSuccess());
         GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
         String[] fontNames = e.getAvailableFontFamilyNames();
         ObservableList<String> fontNamesList = FXCollections.observableArrayList(fontNames);
@@ -59,6 +61,14 @@ public class Controller {
 
     @FXML
     private void onCreatePDFClicked(ActionEvent event) {
+        createPDFButton.setDisable(true);
         progressIndicator.setVisible(true);
+        pdfService.reset();
+        pdfService.start();
+    }
+
+    private void onPDFCompileSuccess() {
+        System.out.println("Compiled PDF!");
+        createPDFButton.setDisable(false);
     }
 }
