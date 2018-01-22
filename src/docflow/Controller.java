@@ -69,6 +69,7 @@ public class Controller {
 
     private void onPDFCompileSuccess() {
         System.out.println("Compiled PDF!");
+        progressIndicator.setVisible(false);
         createPDFButton.setDisable(false);
     }
 }
