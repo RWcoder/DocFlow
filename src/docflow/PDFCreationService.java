@@ -7,13 +7,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PDFCreationService extends Service<File> {
 
+    private String fontName;
     private HashMap<String, String> options;
     private String sourceName;
     private File sourceFile;
@@ -49,22 +47,51 @@ public class PDFCreationService extends Service<File> {
 
         String texName = sourceName + ".tex";
 
+        StringBuilder pc = new StringBuilder();
+        pc.append("pandoc");
+        pc.append(" " + sourceFile.getName());
+        pc.append(" " + yamlFile.getName());
+        pc.append(" " + "-s");
+        pc.append(" " + "-o");
+        pc.append(" " + texName);
+        pc.append(" " + "--pdf-engine=lualatex");
+        pc.append(" " + "-V mainfont:\"TeX Gyre Heros\"");
+        System.out.println("Command pc: " + pc.toString());
+
         System.out.println("executing pandoc");
-        List<String> pandocArgs = Arrays.asList(
+        List<String> pandocArgsList = Arrays.asList(
                 "pandoc",
                 sourceFile.getName(),
                 yamlFile.getName(),
                 "-s",
                 "-o",
                 texName,
-                "--pdf-engine=lualatex"
+                "--pdf-engine=lualatex",
+                "-V mainfont:Garamond"
         );
-        ProcessBuilder pandocProcess = new ProcessBuilder(pandocArgs);
-        pandocProcess.directory(sourceFile.getParentFile());
-        pandocProcess.start().waitFor();
+
+        ArrayList<String> pandocArgs = new ArrayList<>(pandocArgsList);
+
+//        if (fontName != null) {
+//            System.out.println("Adding font");
+//            String fontThing = String.format("-V mainfont:\"%s\"", fontName);
+//            pandocArgs.add(fontThing);
+//            System.out.println("Font added");
+//            System.out.println(pandocArgs);
+//        }
+
+        System.out.println("Font added");
+
+        Runtime.getRuntime().exec(pc.toString(), null, sourceFile.getParentFile()).waitFor();
+
+//        ProcessBuilder pandocProcess = new ProcessBuilder(pc.toString());
+//        pandocProcess.directory(sourceFile.getParentFile());
+//        pandocProcess.inheritIO();
+//        System.out.println(pandocProcess.command());
+//        pandocProcess.start().waitFor();
         System.out.println("Pandoc done");
 
-        yamlFile.delete();
+//        yamlFile.delete();
 
         System.out.println("executing lualatex");
         ProcessBuilder latexProcess = new ProcessBuilder("lualatex", texName);
@@ -110,7 +137,7 @@ public class PDFCreationService extends Service<File> {
     }
 
     public void setFont(String fontName) {
-        options.put("mainfont", String.format("\"%s\"", fontName));
+        this.fontName = fontName;
     }
 
     public File getSourceFile() {
