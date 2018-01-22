@@ -7,11 +7,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 
 public class Controller {
 
@@ -20,6 +22,9 @@ public class Controller {
     public ComboBox<String> fontPicker;
     public Label fileLabel;
     public ProgressIndicator progressIndicator;
+    public Console console;
+    public TextArea consoleTextArea;
+    public Label progressLabel;
 
     private PDFCreationService pdfService;
 
@@ -31,6 +36,7 @@ public class Controller {
         String[] fontNames = e.getAvailableFontFamilyNames();
         ObservableList<String> fontNamesList = FXCollections.observableArrayList(fontNames);
         fontPicker.setItems(fontNamesList);
+        progressLabel.textProperty().bind(pdfService.messageProperty());
     }
 
     @FXML
@@ -63,13 +69,21 @@ public class Controller {
     private void onCreatePDFClicked(ActionEvent event) {
         createPDFButton.setDisable(true);
         progressIndicator.setVisible(true);
+        progressLabel.setVisible(true);
         pdfService.reset();
         pdfService.start();
     }
 
     private void onPDFCompileSuccess() {
-        System.out.println("Compiled PDF!");
-        progressIndicator.setVisible(false);
         createPDFButton.setDisable(false);
+        progressIndicator.setVisible(false);
+        progressLabel.setVisible(false);
+
+        File pdfFile = pdfService.getValue();
+        try {
+            Desktop.getDesktop().open(pdfFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

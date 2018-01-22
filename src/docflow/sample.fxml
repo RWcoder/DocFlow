@@ -13,6 +13,8 @@
 <GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="docflow.Controller">
    <columnConstraints>
       <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
           <RowConstraints />
@@ -22,13 +24,15 @@
         <RowConstraints />
       <RowConstraints />
       <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
     </rowConstraints>
     <Button fx:id="createPDFButton" mnemonicParsing="false" onAction="#onCreatePDFClicked" prefHeight="35.0" prefWidth="123.0" text="Create PDF" GridPane.rowIndex="6" />
-    <ComboBox fx:id="fontPicker" onAction="#onFontPicked" prefHeight="25.0" prefWidth="210.0" GridPane.rowIndex="5" GridPane.columnSpan="2" />
-    <Label text="Font" GridPane.rowIndex="4" GridPane.columnSpan="2" />
-    <Button mnemonicParsing="false" onAction="#openFile" text="Choose File" GridPane.rowIndex="1" GridPane.columnSpan="2" />
+    <ComboBox fx:id="fontPicker" onAction="#onFontPicked" prefHeight="25.0" prefWidth="210.0" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+    <Label text="Font" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+    <Button mnemonicParsing="false" onAction="#openFile" text="Choose File" GridPane.columnSpan="2" GridPane.rowIndex="1" />
     <Label fx:id="fileLabel" prefWidth="210.0" text="Label" GridPane.columnSpan="2" />
-    <ComboBox fx:id="fontSizePicker" prefHeight="25.0" prefWidth="55.0" GridPane.rowIndex="3" GridPane.columnSpan="2">
+    <ComboBox fx:id="fontSizePicker" prefHeight="25.0" prefWidth="55.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
         <items>
             <FXCollections fx:factory="observableArrayList">
                 <Integer fx:value="10" />
@@ -37,6 +41,7 @@
             </FXCollections>
         </items>
     </ComboBox>
-    <Label text="Font Size" GridPane.rowIndex="2" GridPane.columnSpan="2" />
-    <ProgressIndicator fx:id="progressIndicator" prefHeight="10" prefWidth="10" GridPane.rowIndex="6" GridPane.columnIndex="1" visible="false" />
+    <Label text="Font Size" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+    <ProgressIndicator fx:id="progressIndicator" prefHeight="10" prefWidth="10" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+    <Label fx:id="progressLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="8" visible="false"/>
 </GridPane>

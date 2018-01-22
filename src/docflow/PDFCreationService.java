@@ -26,84 +26,66 @@ public class PDFCreationService extends Service<File> {
             @Override
             protected File call() throws Exception {
                 try {
-                    return generatePDF();
+
+                    super.updateMessage("Writing YAML header...");
+
+                    if (!createYAMLFile()) {
+                        super.failed();
+                        return null;
+                    }
+
+                    writeYAMLFile();
+
+
+                    super.updateMessage("Converting to TeX...");
+
+                    String texName = sourceName + ".tex";
+
+                    System.out.println("executing pandoc");
+                    List<String> pandocArgsList = Arrays.asList(
+                            "pandoc",
+                            sourceFile.getName(),
+                            yamlFile.getName(),
+                            "-s",
+                            "-o",
+                            texName,
+                            "--pdf-engine=lualatex"
+                    );
+
+                    ArrayList<String> pandocArgs = new ArrayList<>(pandocArgsList);
+
+                    if (fontName != null) {
+                        System.out.println("Adding font");
+                        String fontThing = String.format("-V mainfont:\"%s\"", fontName);
+                        pandocArgs.add(fontThing);
+                        System.out.println("Font added");
+                        System.out.println(pandocArgs);
+                    }
+
+                    File sourceDir = sourceFile.getParentFile();
+                    String pandocCmd = String.join(" ", pandocArgs);
+                    Runtime.getRuntime().exec(pandocCmd, null, sourceDir).waitFor();
+                    System.out.println("Pandoc done");
+
+                    yamlFile.delete();
+
+
+                    super.updateMessage("Compiling PDF...");
+
+                    ProcessBuilder latexProcess = new ProcessBuilder("lualatex", texName);
+                    latexProcess.directory(sourceFile.getParentFile());
+                    latexProcess.inheritIO();
+                    System.out.println(latexProcess.command());
+                    latexProcess.start().waitFor();
+
+                    String pdfName = sourceName + ".pdf";
+                    return new File(sourceDir, pdfName);
                 } catch (IOException | InterruptedException e) {
                     super.failed();
                     return null;
                 }
             }
         };
-    }
-
-    private File generatePDF() throws IOException, InterruptedException {
-        if (!createYAMLFile()) {
-            super.failed();
-            return null;
-        }
-
-        writeYAMLFile();
-
-        System.out.println("wrote yaml");
-
-        String texName = sourceName + ".tex";
-
-        StringBuilder pc = new StringBuilder();
-        pc.append("pandoc");
-        pc.append(" " + sourceFile.getName());
-        pc.append(" " + yamlFile.getName());
-        pc.append(" " + "-s");
-        pc.append(" " + "-o");
-        pc.append(" " + texName);
-        pc.append(" " + "--pdf-engine=lualatex");
-        pc.append(" " + "-V mainfont:\"TeX Gyre Heros\"");
-        System.out.println("Command pc: " + pc.toString());
-
-        System.out.println("executing pandoc");
-        List<String> pandocArgsList = Arrays.asList(
-                "pandoc",
-                sourceFile.getName(),
-                yamlFile.getName(),
-                "-s",
-                "-o",
-                texName,
-                "--pdf-engine=lualatex",
-                "-V mainfont:Garamond"
-        );
-
-        ArrayList<String> pandocArgs = new ArrayList<>(pandocArgsList);
-
-//        if (fontName != null) {
-//            System.out.println("Adding font");
-//            String fontThing = String.format("-V mainfont:\"%s\"", fontName);
-//            pandocArgs.add(fontThing);
-//            System.out.println("Font added");
-//            System.out.println(pandocArgs);
-//        }
-
-        System.out.println("Font added");
-
-        Runtime.getRuntime().exec(pc.toString(), null, sourceFile.getParentFile()).waitFor();
-
-//        ProcessBuilder pandocProcess = new ProcessBuilder(pc.toString());
-//        pandocProcess.directory(sourceFile.getParentFile());
-//        pandocProcess.inheritIO();
-//        System.out.println(pandocProcess.command());
-//        pandocProcess.start().waitFor();
-        System.out.println("Pandoc done");
-
-//        yamlFile.delete();
-
-        System.out.println("executing lualatex");
-        ProcessBuilder latexProcess = new ProcessBuilder("lualatex", texName);
-        File directory = sourceFile.getParentFile();
-        File output = new File(directory, "output.txt");
-        latexProcess.directory(sourceFile.getParentFile());
-        latexProcess.inheritIO();
-        System.out.println(latexProcess.command());
-        latexProcess.start().waitFor();
-        System.out.println("latex done");
-
-        return null;
     }
 
     private boolean createYAMLFile() throws IOException {
