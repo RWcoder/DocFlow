@@ -25,7 +25,9 @@ public class Controller {
     public Label progressLabel;
     public CheckBox keepTeXCheck;
     public CheckBox defaultFontCheck;
+    public CheckBox titlePageCheck;
 
+    private boolean fileSelected = false;
     private PDFCreationService pdfService;
 
     @FXML
@@ -43,7 +45,8 @@ public class Controller {
         });
         fontSizePicker.getSelectionModel().select(0);
 
-        fontPicker.getSelectionModel().select(0);
+        fontPicker.getSelectionModel().select("TeXGyreHeros");
+        pdfService.setFont("TexGyreHeros");
 
         boolean test = false;
         if (test) {
@@ -63,7 +66,8 @@ public class Controller {
             return;
         }
 
-        fileLabel.setText(file.getAbsolutePath());
+        fileSelected = true;
+        fileLabel.setText(file.getName());
         pdfService.setSourceFile(file);
     }
 
@@ -81,6 +85,14 @@ public class Controller {
 
     @FXML
     private void onCreatePDFClicked(ActionEvent event) {
+        if (!fileSelected) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText(null);
+            alert.setContentText("Please select a file");
+            alert.showAndWait();
+            return;
+        }
+
         createPDFButton.setDisable(true);
         progressIndicator.setVisible(true);
         progressLabel.setVisible(true);
@@ -112,6 +124,14 @@ public class Controller {
             fontPicker.setDisable(false);
             String selectedFont = fontPicker.getSelectionModel().getSelectedItem();
             pdfService.setFont(selectedFont);
+        }
+    }
+
+    public void onTitlePageCheckChanged(ActionEvent actionEvent) {
+        if (titlePageCheck.isSelected()) {
+            pdfService.setTitlePage(true);
+        } else {
+            pdfService.setTitlePage(false);
         }
     }
 }

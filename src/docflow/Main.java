@@ -16,7 +16,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("docflow.fxml"));
         primaryStage.setTitle("DocFlow");
-        primaryStage.setScene(new Scene(root, 300, 350));
+        primaryStage.setScene(new Scene(root, 270, 340));
         primaryStage.show();
     }
 }

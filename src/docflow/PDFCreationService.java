@@ -15,7 +15,7 @@ public class PDFCreationService extends Service<File> {
     private HashMap<String, String> options;
     private String sourceName;
     private File sourceFile;
-    private File yamlFile;
+    private File headerFile;
     private boolean keepTeX = false;
 
     public PDFCreationService() {
@@ -45,8 +45,8 @@ public class PDFCreationService extends Service<File> {
                     System.out.println("executing pandoc");
                     List<String> pandocArgsList = Arrays.asList(
                             "pandoc",
+                            headerFile.getName(),
                             sourceFile.getName(),
-                            yamlFile.getName(),
                             "-s",
                             "-o",
                             texName,
@@ -88,7 +88,8 @@ public class PDFCreationService extends Service<File> {
             }
 
             private boolean cleanUp() {
-                boolean yamlDeleted = yamlFile.delete();
+                boolean headerDeleted = headerFile.delete();
+//                boolean headerDeleted = true;
 
                 File dir = sourceFile.getParentFile();
                 File[] junk = {
@@ -107,20 +108,20 @@ public class PDFCreationService extends Service<File> {
                     junkDeleted &= texFile.delete();
                 }
 
-                return yamlDeleted && junkDeleted;
+                return headerDeleted && junkDeleted;
             }
         };
     }
 
     private boolean createYAMLFile() throws IOException {
         File sourceDirectory = sourceFile.getParentFile();
-        String yamlFileName = sourceName + ".yaml";
-        yamlFile = new File(sourceDirectory, yamlFileName);
-        return yamlFile.createNewFile();
+        String yamlFileName = sourceName + ".txt";
+        headerFile = new File(sourceDirectory, yamlFileName);
+        return headerFile.createNewFile();
     }
 
     private void writeYAMLFile() throws FileNotFoundException {
-        PrintWriter writer = new PrintWriter(yamlFile);
+        PrintWriter writer = new PrintWriter(headerFile);
         writer.println("---");
 
         for (Map.Entry<String, String> option : options.entrySet()) {
@@ -133,12 +134,14 @@ public class PDFCreationService extends Service<File> {
         writer.println("indent: yes");
         writer.println("geometry: margin=1in");
         writer.println("mainfontoptions: Scale=1");
+
 //        writer.println("subparagraph: yes");
-//        writer.println("header-includes:");
 //        writer.println("\t- \\usepackage[compact]{titlesec}");
 //        writer.println("\t- \\defaultfontfeatures{Scale=1}");
 
-        writer.print("...");
+        writer.println("...");
+        writer.println("\\newcommand{\\t}[1]{\\title{#1} \\date{\\today} \\author{David Thomson} \\maketitle}");
+
         writer.close();
     }
 
@@ -156,6 +159,14 @@ public class PDFCreationService extends Service<File> {
 
     public void clearFont() {
         this.fontName = null;
+    }
+
+    public void setTitlePage(boolean titlePage) {
+        if (titlePage) {
+            options.put("classoption", "titlepage");
+        } else if (options.containsKey("classoption")) {
+            options.remove("classoption");
+        }
     }
 
     public File getSourceFile() {

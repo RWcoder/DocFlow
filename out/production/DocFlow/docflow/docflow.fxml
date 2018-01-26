@@ -10,7 +10,7 @@
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane prefHeight="340.0" prefWidth="270.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="docflow.Controller">
+<Pane prefHeight="340.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="docflow.Controller">
     <Button fx:id="createPDFButton" layoutX="15.0" layoutY="267.0" mnemonicParsing="false" onAction="#onCreatePDFClicked" prefHeight="35.0" prefWidth="123.0" text="Create PDF" />
     <Label layoutX="14.0" layoutY="175.0" text="Font" />
     <Button layoutX="14.0" layoutY="41.0" mnemonicParsing="false" onAction="#openFile" text="Choose File" />
@@ -30,4 +30,5 @@
     <Label fx:id="progressLabel" layoutX="15.0" layoutY="311.0" text="Label" />
     <CheckBox fx:id="defaultFontCheck" layoutX="145.0" layoutY="195.0" mnemonicParsing="false" onAction="#onDefaultFontChecked" text="Use default" />
     <CheckBox fx:id="keepTeXCheck" layoutX="15.0" layoutY="238.0" mnemonicParsing="false" onAction="#setKeepTeX" text="Keep .tex file" />
+    <CheckBox fx:id="titlePageCheck" onAction="#onTitlePageCheckChanged" layoutX="145.0" layoutY="238.0" mnemonicParsing="false" text="Separate title page" />
 </Pane>
