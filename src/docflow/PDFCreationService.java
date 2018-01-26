@@ -50,6 +50,7 @@ public class PDFCreationService extends Service<File> {
                             "-o",
                             texName,
                             "--pdf-engine=lualatex"
+//                            "--template=template.latex"
                     );
 
                     ArrayList<String> pandocArgs = new ArrayList<>(pandocArgsList);
@@ -67,8 +68,7 @@ public class PDFCreationService extends Service<File> {
                     Runtime.getRuntime().exec(pandocCmd, null, sourceDir).waitFor();
                     System.out.println("Pandoc done");
 
-                    yamlFile.delete();
-
+//                    yamlFile.delete();
 
                     super.updateMessage("Compiling PDF...");
 
@@ -102,20 +102,24 @@ public class PDFCreationService extends Service<File> {
         for (Map.Entry<String, String> option : options.entrySet()) {
             String optionName = option.getKey();
             String optionValue = option.getValue();
-            String yamlEntry = String.format("%s:%s", optionName, optionValue);
+            String yamlEntry = String.format("%s: %s", optionName, optionValue);
             writer.println(yamlEntry);
         }
 
-        writer.println("subparagraph: yes");
-        writer.println("header-includes:");
-        writer.println("\t- \\usepackage[compact]{titlesec}");
+        writer.println("indent: yes");
+        writer.println("geometry: margin=1in");
+        writer.println("mainfontoptions: Scale=1");
+//        writer.println("subparagraph: yes");
+//        writer.println("header-includes:");
+//        writer.println("\t- \\usepackage[compact]{titlesec}");
+//        writer.println("\t- \\defaultfontfeatures{Scale=1}");
 
         writer.print("...");
         writer.close();
     }
 
-    public void setFontSize(int fontSize) {
-        options.put("fontsize", Integer.toString(fontSize));
+    public void setFontSize(String fontSize) {
+        options.put("fontsize", fontSize);
     }
 
     public void setFont(String fontName) {

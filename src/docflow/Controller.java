@@ -1,5 +1,7 @@
 package docflow;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -7,23 +9,19 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 
 public class Controller {
 
     public Button createPDFButton;
-    public ComboBox<Integer> fontSizePicker;
+    public ListView<String> fontSizePicker;
     public ComboBox<String> fontPicker;
     public Label fileLabel;
     public ProgressIndicator progressIndicator;
-    public Console console;
-    public TextArea consoleTextArea;
     public Label progressLabel;
 
     private PDFCreationService pdfService;
@@ -37,6 +35,14 @@ public class Controller {
         ObservableList<String> fontNamesList = FXCollections.observableArrayList(fontNames);
         fontPicker.setItems(fontNamesList);
         progressLabel.textProperty().bind(pdfService.messageProperty());
+
+        fontSizePicker.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            pdfService.setFontSize(newValue);
+        });
+
+        File f = new File("C:\\Users\\David\\Desktop\\tex_test\\project_notes.md");
+        pdfService.setSourceFile(f);
+        fileLabel.setText(f.getName());
     }
 
     @FXML
@@ -55,7 +61,7 @@ public class Controller {
 
     @FXML
     private void onFontSizePicked(ActionEvent event) {
-        int fontSize = fontSizePicker.getSelectionModel().getSelectedItem();
+        String fontSize = fontSizePicker.getSelectionModel().getSelectedItem();
         pdfService.setFontSize(fontSize);
     }
 
@@ -70,8 +76,7 @@ public class Controller {
         createPDFButton.setDisable(true);
         progressIndicator.setVisible(true);
         progressLabel.setVisible(true);
-        pdfService.reset();
-        pdfService.start();
+        pdfService.restart();
     }
 
     private void onPDFCompileSuccess() {
