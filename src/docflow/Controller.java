@@ -23,6 +23,8 @@ public class Controller {
     public Label fileLabel;
     public ProgressIndicator progressIndicator;
     public Label progressLabel;
+    public CheckBox keepTeXCheck;
+    public CheckBox defaultFontCheck;
 
     private PDFCreationService pdfService;
 
@@ -39,6 +41,9 @@ public class Controller {
         fontSizePicker.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             pdfService.setFontSize(newValue);
         });
+        fontSizePicker.getSelectionModel().select(0);
+
+        fontPicker.getSelectionModel().select(0);
 
         File f = new File("C:\\Users\\David\\Desktop\\tex_test\\project_notes.md");
         pdfService.setSourceFile(f);
@@ -89,6 +94,21 @@ public class Controller {
             Desktop.getDesktop().open(pdfFile);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void setKeepTeX(ActionEvent actionEvent) {
+        pdfService.setKeepTeX(keepTeXCheck.isSelected());
+    }
+
+    public void onDefaultFontChecked(ActionEvent actionEvent) {
+        if (defaultFontCheck.isSelected()) {
+            fontPicker.setDisable(true);
+            pdfService.clearFont();
+        } else {
+            fontPicker.setDisable(false);
+            String selectedFont = fontPicker.getSelectionModel().getSelectedItem();
+            pdfService.setFont(selectedFont);
         }
     }
 }

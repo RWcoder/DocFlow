@@ -16,6 +16,7 @@ public class PDFCreationService extends Service<File> {
     private String sourceName;
     private File sourceFile;
     private File yamlFile;
+    private boolean keepTeX = false;
 
     public PDFCreationService() {
         this.options = new HashMap<>();
@@ -50,25 +51,19 @@ public class PDFCreationService extends Service<File> {
                             "-o",
                             texName,
                             "--pdf-engine=lualatex"
-//                            "--template=template.latex"
                     );
 
                     ArrayList<String> pandocArgs = new ArrayList<>(pandocArgsList);
 
                     if (fontName != null) {
-                        System.out.println("Adding font");
                         String fontThing = String.format("-V mainfont:\"%s\"", fontName);
                         pandocArgs.add(fontThing);
-                        System.out.println("Font added");
-                        System.out.println(pandocArgs);
                     }
 
                     File sourceDir = sourceFile.getParentFile();
                     String pandocCmd = String.join(" ", pandocArgs);
                     Runtime.getRuntime().exec(pandocCmd, null, sourceDir).waitFor();
                     System.out.println("Pandoc done");
-
-//                    yamlFile.delete();
 
                     super.updateMessage("Compiling PDF...");
 
@@ -79,11 +74,40 @@ public class PDFCreationService extends Service<File> {
                     latexProcess.start().waitFor();
 
                     String pdfName = sourceName + ".pdf";
+
+                    if (!cleanUp()) {
+                        super.failed();
+                        return null;
+                    }
+
                     return new File(sourceDir, pdfName);
                 } catch (IOException | InterruptedException e) {
                     super.failed();
                     return null;
                 }
+            }
+
+            private boolean cleanUp() {
+                boolean yamlDeleted = yamlFile.delete();
+
+                File dir = sourceFile.getParentFile();
+                File[] junk = {
+                        new File(dir, sourceName + ".aux"),
+                        new File(dir, sourceName + ".log"),
+                        new File(dir, sourceName + ".out")
+                };
+
+                boolean junkDeleted = true;
+                for (File f : junk) {
+                    junkDeleted &= f.delete();
+                }
+
+                if (!keepTeX) {
+                    File texFile = new File(dir, sourceName + ".tex");
+                    junkDeleted &= texFile.delete();
+                }
+
+                return yamlDeleted && junkDeleted;
             }
         };
     }
@@ -118,12 +142,20 @@ public class PDFCreationService extends Service<File> {
         writer.close();
     }
 
+    public void setKeepTeX(boolean keepTeX) {
+        this.keepTeX = keepTeX;
+    }
+
     public void setFontSize(String fontSize) {
         options.put("fontsize", fontSize);
     }
 
     public void setFont(String fontName) {
         this.fontName = fontName;
+    }
+
+    public void clearFont() {
+        this.fontName = null;
     }
 
     public File getSourceFile() {
