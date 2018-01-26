@@ -8,33 +8,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressIndicator?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.Pane?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="docflow.Controller">
-   <columnConstraints>
-      <ColumnConstraints />
-      <ColumnConstraints />
-      <ColumnConstraints />
-   </columnConstraints>
-   <rowConstraints>
-          <RowConstraints />
-          <RowConstraints />
-      <RowConstraints />
-        <RowConstraints />
-        <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-    </rowConstraints>
-    <Button fx:id="createPDFButton" mnemonicParsing="false" onAction="#onCreatePDFClicked" prefHeight="35.0" prefWidth="123.0" text="Create PDF" GridPane.rowIndex="6" />
-    <ComboBox fx:id="fontPicker" onAction="#onFontPicked" prefHeight="25.0" prefWidth="125.0" GridPane.columnSpan="2" GridPane.rowIndex="5" />
-    <Label text="Font" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-    <Button mnemonicParsing="false" onAction="#openFile" text="Choose File" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-    <Label fx:id="fileLabel" prefWidth="210.0" text="Label" GridPane.columnSpan="2" />
-    <ListView fx:id="fontSizePicker" maxHeight="71" maxWidth="70" GridPane.columnSpan="2" GridPane.rowIndex="3">
+<Pane prefHeight="340.0" prefWidth="270.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="docflow.Controller">
+    <Button fx:id="createPDFButton" layoutX="15.0" layoutY="267.0" mnemonicParsing="false" onAction="#onCreatePDFClicked" prefHeight="35.0" prefWidth="123.0" text="Create PDF" />
+    <Label layoutX="14.0" layoutY="175.0" text="Font" />
+    <Button layoutX="14.0" layoutY="41.0" mnemonicParsing="false" onAction="#openFile" text="Choose File" />
+    <Label fx:id="fileLabel" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="200.0" text="(Please choose a file)" />
+    <ProgressIndicator fx:id="progressIndicator" layoutX="145.0" layoutY="270.0" prefHeight="30.0" prefWidth="30.0" visible="false" />
+    <ComboBox fx:id="fontPicker" layoutX="14.0" layoutY="191.0" onAction="#onFontPicked" prefHeight="25.0" prefWidth="125.0" />
+    <ListView fx:id="fontSizePicker" layoutX="14.0" layoutY="93.0" maxHeight="71" maxWidth="70">
         <items>
             <FXCollections fx:factory="observableArrayList">
                 <String fx:value="10pt" />
@@ -43,9 +26,8 @@
             </FXCollections>
         </items>
     </ListView>
-    <Label text="Font Size" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-    <ProgressIndicator fx:id="progressIndicator" prefHeight="10" prefWidth="10" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-    <Label fx:id="progressLabel" text="Label" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-    <CheckBox fx:id="defaultFontCheck" onAction="#onDefaultFontChecked" mnemonicParsing="false" text="Use default" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-    <CheckBox fx:id="keepTeXCheck" onAction="#setKeepTeX" mnemonicParsing="false" text="Keep .tex file" GridPane.rowIndex="8" />
-</GridPane>
+    <Label layoutX="14.0" layoutY="76.0" text="Font Size" />
+    <Label fx:id="progressLabel" layoutX="15.0" layoutY="311.0" text="Label" />
+    <CheckBox fx:id="defaultFontCheck" layoutX="145.0" layoutY="195.0" mnemonicParsing="false" onAction="#onDefaultFontChecked" text="Use default" />
+    <CheckBox fx:id="keepTeXCheck" layoutX="15.0" layoutY="238.0" mnemonicParsing="false" onAction="#setKeepTeX" text="Keep .tex file" />
+</Pane>

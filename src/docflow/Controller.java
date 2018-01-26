@@ -45,9 +45,12 @@ public class Controller {
 
         fontPicker.getSelectionModel().select(0);
 
-        File f = new File("C:\\Users\\David\\Desktop\\tex_test\\project_notes.md");
-        pdfService.setSourceFile(f);
-        fileLabel.setText(f.getName());
+        boolean test = false;
+        if (test) {
+            File f = new File("C:\\Users\\David\\Desktop\\tex_test\\project_notes.md");
+            pdfService.setSourceFile(f);
+            fileLabel.setText(f.getName());
+        }
     }
 
     @FXML
