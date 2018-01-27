@@ -1,7 +1,5 @@
 package docflow;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
+import jdk.nashorn.internal.parser.JSONParser;
 
 import java.awt.*;
 import java.io.File;
@@ -34,10 +33,10 @@ public class Controller {
     private void initialize() {
         pdfService = new PDFCreationService();
         pdfService.setOnSucceeded(success -> onPDFCompileSuccess());
-        GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        String[] fontNames = e.getAvailableFontFamilyNames();
-        ObservableList<String> fontNamesList = FXCollections.observableArrayList(fontNames);
-        fontPicker.setItems(fontNamesList);
+//        GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+//        String[] fontNames = e.getAvailableFontFamilyNames();
+//        ObservableList<String> fontNamesList = FXCollections.observableArrayList(fontNames);
+//        fontPicker.setItems(fontNamesList);
         progressLabel.textProperty().bind(pdfService.messageProperty());
 
         fontSizePicker.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -45,15 +44,8 @@ public class Controller {
         });
         fontSizePicker.getSelectionModel().select(0);
 
-        fontPicker.getSelectionModel().select("TeXGyreHeros");
-        pdfService.setFont("TexGyreHeros");
-
-        boolean test = false;
-        if (test) {
-            File f = new File("C:\\Users\\David\\Desktop\\tex_test\\project_notes.md");
-            pdfService.setSourceFile(f);
-            fileLabel.setText(f.getName());
-        }
+        //        fontPicker.getSelectionModel().select("tgheros");
+//        pdfService.setFont("TexGyreHeros");
     }
 
     @FXML

@@ -1,0 +1,9 @@
+{
+  "fonts": [
+    {
+      "fontName": "TeX Gyre Heros",
+      "usage": "\\usepackage{tgheros}",
+      "sans": true
+    }
+  ]
+}

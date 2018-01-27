@@ -1,0 +1,1 @@
+TeX Gyre Heros:tgheros:false

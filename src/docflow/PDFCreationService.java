@@ -45,18 +45,18 @@ public class PDFCreationService extends Service<File> {
                     System.out.println("executing pandoc");
                     List<String> pandocArgsList = Arrays.asList(
                             "pandoc",
+                            "-f markdown-latex_macros",
                             headerFile.getName(),
                             sourceFile.getName(),
                             "-s",
                             "-o",
-                            texName,
-                            "--pdf-engine=lualatex"
+                            texName
                     );
 
                     ArrayList<String> pandocArgs = new ArrayList<>(pandocArgsList);
 
                     if (fontName != null) {
-                        String fontThing = String.format("-V mainfont:\"%s\"", fontName);
+                        String fontThing = String.format("-V fontfamily:\"%s\"", fontName);
                         pandocArgs.add(fontThing);
                     }
 
@@ -67,7 +67,7 @@ public class PDFCreationService extends Service<File> {
 
                     super.updateMessage("Compiling PDF...");
 
-                    ProcessBuilder latexProcess = new ProcessBuilder("lualatex", texName);
+                    ProcessBuilder latexProcess = new ProcessBuilder("pdflatex", texName);
                     latexProcess.directory(sourceFile.getParentFile());
                     latexProcess.inheritIO();
                     System.out.println(latexProcess.command());
@@ -88,8 +88,8 @@ public class PDFCreationService extends Service<File> {
             }
 
             private boolean cleanUp() {
-                boolean headerDeleted = headerFile.delete();
-//                boolean headerDeleted = true;
+//                boolean headerDeleted = headerFile.delete();
+                boolean headerDeleted = true;
 
                 File dir = sourceFile.getParentFile();
                 File[] junk = {
@@ -133,19 +133,19 @@ public class PDFCreationService extends Service<File> {
 
         writer.println("indent: yes");
         writer.println("geometry: margin=1in");
-        writer.println("mainfontoptions: Scale=1");
+//        writer.println("mainfontoptions: Scale=1");
         writer.println("header-includes:");
         writer.println("\t- \\usepackage{titling}");
-//        writer.println("subparagraph: yes");
-//        writer.println("\t- \\usepackage[compact]{titlesec}");
-//        writer.println("\t- \\defaultfontfeatures{Scale=1}");
+        writer.println("\t- \\renewcommand*\\familydefault{\\sfdefault}");
 
         writer.println("...");
 
-        writer.println("\\newcommand{\\t}[1]{\\title{#1} \\date{\\today} \\author{David Thomson} \\maketitle}");
+        writer.println("\\renewcommand{\\t}[1]{\\title{#1} \\date{\\today} \\author{David Thomson} \\maketitle}");
         writer.println("\\newcommand{\\tna}[1]{\\title{#1} \\preauthor{} \\author{} \\postauthor{} \\date{\\today} \\maketitle}");
         writer.println("\\newcommand{\\tnd}[1]{\\title{#1} \\author{David Thomson} \\predate{} \\date{} \\postdate{} \\maketitle}");
         writer.println("\\newcommand{\\tnand}[1]{\\title{#1} \\preauthor{} \\author{} \\postauthor{} \\predate{} \\date{} \\postdate{} \\maketitle}");
+//        writer.println("\\newcommand{\\sansfont}{\\renewcommand*\\familydefault{\\sfdefault}}");
+//        writer.println("\\sansfont");
 
         writer.close();
     }

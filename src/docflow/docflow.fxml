@@ -16,7 +16,15 @@
     <Button layoutX="14.0" layoutY="41.0" mnemonicParsing="false" onAction="#openFile" text="Choose File" />
     <Label fx:id="fileLabel" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="200.0" text="(Please choose a file)" />
     <ProgressIndicator fx:id="progressIndicator" layoutX="145.0" layoutY="270.0" prefHeight="30.0" prefWidth="30.0" visible="false" />
-    <ComboBox fx:id="fontPicker" layoutX="14.0" layoutY="191.0" onAction="#onFontPicked" prefHeight="25.0" prefWidth="125.0" />
+    <ComboBox fx:id="fontPicker" layoutX="14.0" layoutY="191.0" onAction="#onFontPicked" prefHeight="25.0" prefWidth="125.0">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="tgheros" />
+                <String fx:value="tgpagella" />
+                <String fx:value="Tex Gyre Termes" />
+            </FXCollections>
+        </items>
+    </ComboBox>
     <ListView fx:id="fontSizePicker" layoutX="14.0" layoutY="93.0" maxHeight="71" maxWidth="70">
         <items>
             <FXCollections fx:factory="observableArrayList">
