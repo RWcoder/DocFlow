@@ -9,7 +9,11 @@
         <usage>\usepackage{tgpagella}</usage>
     </font>
     <font>
-        <name>cat</name>
-        <usage>\usepackage{cat}</usage>
+        <name>TeX Gyre Termes</name>
+        <usage>\usepackage{tgtermes}</usage>
+    </font>
+    <font>
+        <name>TeX Gyre Aventador</name>
+        <usage>\usepackage{tgadventor} \renewcommand*\familydefault{\sfdefault}</usage>
     </font>
 </fonts>

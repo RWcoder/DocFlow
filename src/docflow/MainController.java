@@ -44,6 +44,7 @@ public class MainController {
     @FXML
     private void initialize() {
         pdfService = new PDFCreationService();
+        pdfService.setOnSucceeded(s -> onPDFCompileSuccess());
         progressLabel.textProperty().bind(pdfService.messageProperty());
 
         fontSizePicker.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
