@@ -10,21 +10,13 @@
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane prefHeight="340.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="docflow.Controller">
+<Pane prefHeight="340.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="docflow.MainController">
     <Button fx:id="createPDFButton" layoutX="15.0" layoutY="267.0" mnemonicParsing="false" onAction="#onCreatePDFClicked" prefHeight="35.0" prefWidth="123.0" text="Create PDF" />
     <Label layoutX="14.0" layoutY="175.0" text="Font" />
     <Button layoutX="14.0" layoutY="41.0" mnemonicParsing="false" onAction="#openFile" text="Choose File" />
     <Label fx:id="fileLabel" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="200.0" text="(Please choose a file)" />
     <ProgressIndicator fx:id="progressIndicator" layoutX="145.0" layoutY="270.0" prefHeight="30.0" prefWidth="30.0" visible="false" />
-    <ComboBox fx:id="fontPicker" layoutX="14.0" layoutY="191.0" onAction="#onFontPicked" prefHeight="25.0" prefWidth="125.0">
-        <!--<items>-->
-            <!--<FXCollections fx:factory="observableArrayList">-->
-                <!--<String fx:value="tgheros" />-->
-                <!--<String fx:value="tgpagella" />-->
-                <!--<String fx:value="Tex Gyre Termes" />-->
-            <!--</FXCollections>-->
-        <!--</items>-->
-    </ComboBox>
+    <ComboBox fx:id="fontPicker" layoutX="14.0" layoutY="191.0" onAction="#onFontPicked" prefHeight="25.0" prefWidth="125.0" />
     <ListView fx:id="fontSizePicker" layoutX="14.0" layoutY="93.0" maxHeight="71" maxWidth="70">
         <items>
             <FXCollections fx:factory="observableArrayList">
@@ -36,7 +28,8 @@
     </ListView>
     <Label layoutX="14.0" layoutY="76.0" text="Font Size" />
     <Label fx:id="progressLabel" layoutX="15.0" layoutY="311.0" text="Label" />
-    <CheckBox fx:id="defaultFontCheck" layoutX="145.0" layoutY="195.0" mnemonicParsing="false" onAction="#onDefaultFontChecked" text="Use default" />
+    <CheckBox fx:id="defaultFontCheck" layoutX="150.0" layoutY="167.0" mnemonicParsing="false" onAction="#onDefaultFontChecked" text="Use default font" />
     <CheckBox fx:id="keepTeXCheck" layoutX="15.0" layoutY="238.0" mnemonicParsing="false" onAction="#setKeepTeX" text="Keep .tex file" />
-    <CheckBox fx:id="titlePageCheck" onAction="#onTitlePageCheckChanged" layoutX="145.0" layoutY="238.0" mnemonicParsing="false" text="Separate title page" />
+    <CheckBox fx:id="titlePageCheck" layoutX="145.0" layoutY="238.0" mnemonicParsing="false" onAction="#onTitlePageCheckChanged" text="Separate title page" />
+    <Button onAction="#launchAddFontWindow" layoutX="150.0" layoutY="191.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Add font" />
 </Pane>

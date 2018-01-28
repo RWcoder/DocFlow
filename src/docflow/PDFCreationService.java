@@ -83,8 +83,8 @@ public class PDFCreationService extends Service<File> {
             }
 
             private boolean cleanUp() {
-//                boolean headerDeleted = headerFile.delete();
-                boolean headerDeleted = true;
+                boolean headerDeleted = headerFile.delete();
+//                boolean headerDeleted = true;
 
                 File dir = sourceFile.getParentFile();
                 File[] junk = {

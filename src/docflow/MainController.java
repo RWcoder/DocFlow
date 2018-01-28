@@ -4,10 +4,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import jdk.nashorn.internal.parser.JSONParser;
 
 import java.awt.*;
@@ -17,7 +23,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
-public class Controller {
+public class MainController {
 
     public Button createPDFButton;
     public ListView<String> fontSizePicker;
@@ -31,15 +37,11 @@ public class Controller {
 
     private boolean fileSelected = false;
     private PDFCreationService pdfService;
+    private FontHandler fontHandler;
 
     @FXML
     private void initialize() {
         pdfService = new PDFCreationService();
-        pdfService.setOnSucceeded(success -> onPDFCompileSuccess());
-//        GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
-//        String[] fontNames = e.getAvailableFontFamilyNames();
-//        ObservableList<String> fontNamesList = FXCollections.observableArrayList(fontNames);
-//        fontPicker.setItems(fontNamesList);
         progressLabel.textProperty().bind(pdfService.messageProperty());
 
         fontSizePicker.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -47,12 +49,11 @@ public class Controller {
         });
         fontSizePicker.getSelectionModel().select(0);
 
-        FontHandler fh = new FontHandler();
-        fontPicker.setItems(fh.getFonts());
+        fontHandler = new FontHandler();
+        fontPicker.setItems(fontHandler.getFonts());
 
-
-        //        fontPicker.getSelectionModel().select("tgheros");
-//        pdfService.setFont("TexGyreHeros");
+        defaultFontCheck.setSelected(true);
+        onDefaultFontChecked(null);
     }
 
     @FXML
@@ -95,6 +96,7 @@ public class Controller {
         createPDFButton.setDisable(true);
         progressIndicator.setVisible(true);
         progressLabel.setVisible(true);
+
         pdfService.restart();
     }
 
@@ -132,5 +134,22 @@ public class Controller {
         } else {
             pdfService.setTitlePage(false);
         }
+    }
+
+    public void launchAddFontWindow(ActionEvent actionEvent) throws Exception {
+        Stage addFontStage = new Stage();
+        addFontStage.initModality(Modality.APPLICATION_MODAL);
+        Node source = (Node) actionEvent.getSource();
+        addFontStage.initOwner(source.getScene().getWindow());
+        String fxmlFile = "add_font.fxml";
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent parent = (Parent) loader.load();
+        Scene addFontScene = new Scene(parent, 250, 300);
+
+        AddFontController c = (AddFontController) loader.getController();
+        c.setFontHandler(fontHandler);
+
+        addFontStage.setScene(addFontScene);
+        addFontStage.show();
     }
 }

@@ -6,12 +6,8 @@ import java.util.List;
 
 @XmlRootElement(name="fonts")
 public class FontListWrapper {
-    private List<Font> fonts;
 
-//    @XmlElement(name="thing")
-//    public String getThing() {
-//        return "thing";
-//    }
+    private List<Font> fonts;
 
     @XmlElement(name="font")
     public List<Font> getFonts() {
