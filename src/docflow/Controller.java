@@ -13,12 +13,15 @@ import jdk.nashorn.internal.parser.JSONParser;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
 
 public class Controller {
 
     public Button createPDFButton;
     public ListView<String> fontSizePicker;
-    public ComboBox<String> fontPicker;
+    public ComboBox<Font> fontPicker;
     public Label fileLabel;
     public ProgressIndicator progressIndicator;
     public Label progressLabel;
@@ -43,6 +46,10 @@ public class Controller {
             pdfService.setFontSize(newValue);
         });
         fontSizePicker.getSelectionModel().select(0);
+
+        FontHandler fh = new FontHandler();
+        fontPicker.setItems(fh.getFonts());
+
 
         //        fontPicker.getSelectionModel().select("tgheros");
 //        pdfService.setFont("TexGyreHeros");
@@ -71,8 +78,8 @@ public class Controller {
 
     @FXML
     private void onFontPicked(ActionEvent event) {
-        String fontName = fontPicker.getSelectionModel().getSelectedItem();
-        pdfService.setFont(fontName);
+        Font font = fontPicker.getSelectionModel().getSelectedItem();
+        pdfService.setFont(font);
     }
 
     @FXML
@@ -114,7 +121,7 @@ public class Controller {
             pdfService.clearFont();
         } else {
             fontPicker.setDisable(false);
-            String selectedFont = fontPicker.getSelectionModel().getSelectedItem();
+            Font selectedFont = fontPicker.getSelectionModel().getSelectedItem();
             pdfService.setFont(selectedFont);
         }
     }

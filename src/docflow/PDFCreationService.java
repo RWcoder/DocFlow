@@ -11,7 +11,7 @@ import java.util.*;
 
 public class PDFCreationService extends Service<File> {
 
-    private String fontName;
+    private Font font;
     private HashMap<String, String> options;
     private String sourceName;
     private File sourceFile;
@@ -54,11 +54,6 @@ public class PDFCreationService extends Service<File> {
                     );
 
                     ArrayList<String> pandocArgs = new ArrayList<>(pandocArgsList);
-
-                    if (fontName != null) {
-                        String fontThing = String.format("-V fontfamily:\"%s\"", fontName);
-                        pandocArgs.add(fontThing);
-                    }
 
                     File sourceDir = sourceFile.getParentFile();
                     String pandocCmd = String.join(" ", pandocArgs);
@@ -136,7 +131,10 @@ public class PDFCreationService extends Service<File> {
 //        writer.println("mainfontoptions: Scale=1");
         writer.println("header-includes:");
         writer.println("\t- \\usepackage{titling}");
-        writer.println("\t- \\renewcommand*\\familydefault{\\sfdefault}");
+
+        if (font != null) {
+            writer.println("\t- " + font.getUsage());
+        }
 
         writer.println("...");
 
@@ -158,12 +156,12 @@ public class PDFCreationService extends Service<File> {
         options.put("fontsize", fontSize);
     }
 
-    public void setFont(String fontName) {
-        this.fontName = fontName;
+    public void setFont(Font font) {
+        this.font = font;
     }
 
     public void clearFont() {
-        this.fontName = null;
+        this.font = null;
     }
 
     public void setTitlePage(boolean titlePage) {

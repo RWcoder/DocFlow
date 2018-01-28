@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<fonts>
+    <font>
+        <name>TeX Gyre Heros</name>
+        <usage>\usepackage{tgheros} \renewcommand*\familydefault{\sfdefault}</usage>
+    </font>
+    <font>
+        <name>TeX Gyre Pagella</name>
+        <usage>\usepackage{tgpagella}</usage>
+    </font>
+</fonts>
