@@ -16,6 +16,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import jdk.nashorn.internal.parser.JSONParser;
 
+import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +56,17 @@ public class MainController {
 
         defaultFontCheck.setSelected(true);
         onDefaultFontChecked(null);
+    }
+
+    public void onClose() {
+        try {
+            fontHandler.updateFonts();
+        } catch (JAXBException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Failed to save new fonts");
+            alert.setContentText("Something went wrong. We couldn't write the new fonts.");
+            alert.showAndWait();
+        }
     }
 
     @FXML

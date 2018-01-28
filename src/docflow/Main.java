@@ -19,7 +19,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("docflow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("docflow.fxml"));
+        Parent root = loader.load();
+        MainController mainController = loader.getController();
+        primaryStage.setOnHidden(event -> mainController.onClose());
         primaryStage.setTitle("DocFlow");
         primaryStage.setScene(new Scene(root, 270, 340));
         primaryStage.show();

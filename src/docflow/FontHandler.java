@@ -3,10 +3,7 @@ package docflow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import javax.xml.bind.JAXB;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
 import java.io.File;
 import java.util.List;
 
@@ -36,7 +33,7 @@ public class FontHandler {
         newFonts = true;
     }
 
-    public void updateFonts() {
+    public void updateFonts() throws JAXBException {
         if (newFonts) {
             writeFontData();
             newFonts = false;
@@ -53,7 +50,15 @@ public class FontHandler {
         return wrapper.getFonts();
     }
 
-    public void writeFontData() {
+    public void writeFontData() throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(FontListWrapper.class);
+        Marshaller m = context.createMarshaller();
+        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
+        FontListWrapper wrapper = new FontListWrapper();
+        wrapper.setFonts(fonts);
+
+        File fontFile = new File(FONT_PATH);
+        m.marshal(wrapper, fontFile);
     }
 }

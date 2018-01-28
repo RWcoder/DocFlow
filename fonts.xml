@@ -8,4 +8,8 @@
         <name>TeX Gyre Pagella</name>
         <usage>\usepackage{tgpagella}</usage>
     </font>
+    <font>
+        <name>cat</name>
+        <usage>\usepackage{cat}</usage>
+    </font>
 </fonts>
