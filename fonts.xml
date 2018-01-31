@@ -16,4 +16,24 @@
         <name>TeX Gyre Aventador</name>
         <usage>\usepackage{tgadventor} \renewcommand*\familydefault{\sfdefault}</usage>
     </font>
+    <font>
+        <name>TeX Gyre Bonum</name>
+        <usage>\usepackage{tgbonum}</usage>
+    </font>
+    <font>
+        <name>Computer Modern Sans</name>
+        <usage>\renewcommand*\familydefault{\sfdefault}</usage>
+    </font>
+    <font>
+        <name>Courier</name>
+        <usage>\usepackage{courier} \renewcommand*\familydefault{\ttdefault}</usage>
+    </font>
+    <font>
+        <name>PUNK</name>
+        <usage>\usepackage{punk}</usage>
+    </font>
+    <font>
+        <name>GFS Didot</name>
+        <usage>\usepackage{gfsdidot}</usage>
+    </font>
 </fonts>

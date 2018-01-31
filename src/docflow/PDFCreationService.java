@@ -37,7 +37,6 @@ public class PDFCreationService extends Service<File> {
 
                     writeHeaderFile();
 
-
                     super.updateMessage("Converting to TeX...");
 
                     String texName = sourceName + ".tex";
@@ -83,8 +82,8 @@ public class PDFCreationService extends Service<File> {
             }
 
             private boolean cleanUp() {
-                boolean headerDeleted = headerFile.delete();
-//                boolean headerDeleted = true;
+//                boolean headerDeleted = headerFile.delete();
+                boolean headerDeleted = true;
 
                 File dir = sourceFile.getParentFile();
                 File[] junk = {
@@ -131,6 +130,9 @@ public class PDFCreationService extends Service<File> {
 //        writer.println("mainfontoptions: Scale=1");
         writer.println("header-includes:");
         writer.println("\t- \\usepackage{titling}");
+        writer.println("\t- \\usepackage{enumitem}");
+        writer.println("\t- \\setlist[enumerate]{after=\\noindent}");
+        writer.println("\t- \\setlist[itemize]{after=\\noindent}");
 
         if (font != null) {
             writer.println("\t- " + font.getUsage());
