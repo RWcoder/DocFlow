@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -22,6 +23,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.URI;
 import java.net.URL;
 
@@ -32,10 +34,10 @@ public class MainController {
     public ComboBox<Font> fontPicker;
     public Label fileLabel;
     public ProgressIndicator progressIndicator;
-    public Label progressLabel;
     public CheckBox keepTeXCheck;
     public CheckBox defaultFontCheck;
     public CheckBox titlePageCheck;
+    public TextArea consoleTextArea;
 
     private boolean fileSelected = false;
     private PDFCreationService pdfService;
@@ -45,7 +47,11 @@ public class MainController {
     private void initialize() {
         pdfService = new PDFCreationService();
         pdfService.setOnSucceeded(s -> onPDFCompileSuccess());
-        progressLabel.textProperty().bind(pdfService.messageProperty());
+
+        Console console = new Console(consoleTextArea);
+        PrintStream ps = new PrintStream(console, true);
+        System.setOut(ps);
+        System.setErr(ps);
 
         fontSizePicker.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             pdfService.setFontSize(newValue);
@@ -109,7 +115,7 @@ public class MainController {
 
         createPDFButton.setDisable(true);
         progressIndicator.setVisible(true);
-        progressLabel.setVisible(true);
+        consoleTextArea.clear();
 
         pdfService.restart();
     }
@@ -117,7 +123,6 @@ public class MainController {
     private void onPDFCompileSuccess() {
         createPDFButton.setDisable(false);
         progressIndicator.setVisible(false);
-        progressLabel.setVisible(false);
 
         File pdfFile = pdfService.getValue();
         try {

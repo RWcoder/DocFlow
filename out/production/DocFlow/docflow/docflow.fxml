@@ -8,9 +8,11 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<Pane prefHeight="340.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="docflow.MainController">
+<Pane prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="docflow.MainController">
     <Button fx:id="createPDFButton" layoutX="15.0" layoutY="267.0" mnemonicParsing="false" onAction="#onCreatePDFClicked" prefHeight="35.0" prefWidth="123.0" text="Create PDF" />
     <Label layoutX="14.0" layoutY="175.0" text="Font" />
     <Button layoutX="14.0" layoutY="41.0" mnemonicParsing="false" onAction="#openFile" text="Choose File" />
@@ -27,9 +29,12 @@
         </items>
     </ListView>
     <Label layoutX="14.0" layoutY="76.0" text="Font Size" />
-    <Label fx:id="progressLabel" layoutX="15.0" layoutY="311.0" text="Label" />
     <CheckBox fx:id="defaultFontCheck" layoutX="150.0" layoutY="167.0" mnemonicParsing="false" onAction="#onDefaultFontChecked" text="Use default font" />
     <CheckBox fx:id="keepTeXCheck" layoutX="15.0" layoutY="238.0" mnemonicParsing="false" onAction="#setKeepTeX" text="Keep .tex file" />
     <CheckBox fx:id="titlePageCheck" layoutX="145.0" layoutY="238.0" mnemonicParsing="false" onAction="#onTitlePageCheckChanged" text="Separate title page" />
-    <Button onAction="#launchAddFontWindow" layoutX="150.0" layoutY="191.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Add font" />
+    <Button layoutX="150.0" layoutY="191.0" mnemonicParsing="false" onAction="#launchAddFontWindow" prefHeight="25.0" prefWidth="70.0" text="Add font" />
+    <TextArea fx:id="consoleTextArea" layoutX="15.0" layoutY="314.0" prefHeight="270.0" prefWidth="370.0" editable="false">
+      <font>
+         <Font name="Courier New" size="10.0" />
+      </font></TextArea>
 </Pane>

@@ -1,5 +1,6 @@
 package docflow;
 
+import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
 import java.io.IOException;
@@ -15,6 +16,6 @@ public class Console extends OutputStream {
 
     @Override
     public void write(int i) throws IOException {
-        textArea.appendText(String.valueOf((char) i));
+        Platform.runLater(() -> textArea.appendText(String.valueOf((char) i)));
     }
 }

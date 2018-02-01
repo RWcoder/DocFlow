@@ -3,10 +3,7 @@ package docflow;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 
 public class PDFCreationService extends Service<File> {
@@ -28,7 +25,7 @@ public class PDFCreationService extends Service<File> {
             protected File call() throws Exception {
                 try {
 
-                    super.updateMessage("Writing YAML header...");
+                    System.out.println("Writing YAML header...");
 
                     if (!createYAMLFile()) {
                         super.failed();
@@ -37,11 +34,9 @@ public class PDFCreationService extends Service<File> {
 
                     writeHeaderFile();
 
-                    super.updateMessage("Converting to TeX...");
-
+                    System.out.println("Converting to TeX...");
                     String texName = sourceName + ".tex";
 
-                    System.out.println("executing pandoc");
                     List<String> pandocArgsList = Arrays.asList(
                             "pandoc",
                             "-f markdown-latex_macros",
@@ -57,15 +52,26 @@ public class PDFCreationService extends Service<File> {
                     File sourceDir = sourceFile.getParentFile();
                     String pandocCmd = String.join(" ", pandocArgs);
                     Runtime.getRuntime().exec(pandocCmd, null, sourceDir).waitFor();
-                    System.out.println("Pandoc done");
 
                     super.updateMessage("Compiling PDF...");
 
-                    ProcessBuilder latexProcess = new ProcessBuilder("pdflatex", texName);
-                    latexProcess.directory(sourceFile.getParentFile());
-                    latexProcess.inheritIO();
-                    System.out.println(latexProcess.command());
-                    latexProcess.start().waitFor();
+                    ProcessBuilder latexProcessBuilder = new ProcessBuilder("pdflatex", texName);
+                    latexProcessBuilder.directory(sourceFile.getParentFile());
+                    Process latexProcess = latexProcessBuilder.start();
+                    final Thread ioThread = new Thread(() -> {
+                        try {
+                            final BufferedReader reader = new BufferedReader(new InputStreamReader(latexProcess.getInputStream()));
+                            String line;
+                            while ((line = reader.readLine()) != null) {
+                                System.out.println(line);
+                            }
+                            reader.close();
+                        } catch (final Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    ioThread.start();
+                    latexProcess.waitFor();
 
                     String pdfName = sourceName + ".pdf";
 
@@ -74,6 +80,7 @@ public class PDFCreationService extends Service<File> {
                         return null;
                     }
 
+                    System.out.println("Done");
                     return new File(sourceDir, pdfName);
                 } catch (IOException | InterruptedException e) {
                     super.failed();
@@ -82,8 +89,8 @@ public class PDFCreationService extends Service<File> {
             }
 
             private boolean cleanUp() {
-//                boolean headerDeleted = headerFile.delete();
-                boolean headerDeleted = true;
+                boolean headerDeleted = headerFile.delete();
+//                boolean headerDeleted = true;
 
                 File dir = sourceFile.getParentFile();
                 File[] junk = {

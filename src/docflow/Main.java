@@ -24,7 +24,7 @@ public class Main extends Application {
         MainController mainController = loader.getController();
         primaryStage.setOnHidden(event -> mainController.onClose());
         primaryStage.setTitle("DocFlow");
-        primaryStage.setScene(new Scene(root, 270, 340));
+        primaryStage.setScene(new Scene(root, 400, 600));
         primaryStage.show();
     }
 }
