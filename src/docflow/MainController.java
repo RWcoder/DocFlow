@@ -12,6 +12,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -19,13 +22,14 @@ import jdk.nashorn.internal.parser.JSONParser;
 
 import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBException;
-import java.awt.*;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 
 public class MainController {
 
@@ -79,16 +83,11 @@ public class MainController {
     @FXML
     private void openFile(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose Markdown or Text file");
+        fileChooser.setTitle("Choose Markdown or text file");
         File file = fileChooser.showOpenDialog(fileLabel.getScene().getWindow());
-
-        if (file == null) {
-            return;
+        if (file != null) {
+            setFile(file);
         }
-
-        fileSelected = true;
-        fileLabel.setText(file.getName());
-        pdfService.setSourceFile(file);
     }
 
     @FXML
@@ -170,5 +169,41 @@ public class MainController {
 
         addFontStage.setScene(addFontScene);
         addFontStage.show();
+    }
+
+    public void removeCurrentFile(ActionEvent actionEvent) {
+        fileLabel.setText("(Choose a file)");
+        fileSelected = false;
+    }
+
+    public void fileDragOver(DragEvent dragEvent) {
+        Dragboard db = dragEvent.getDragboard();
+        if (db.hasFiles()) {
+            dragEvent.acceptTransferModes(TransferMode.COPY);
+        } else {
+            dragEvent.consume();
+        }
+    }
+
+    public void fileDragDropped(DragEvent dragEvent) {
+        Dragboard db = dragEvent.getDragboard();
+        boolean success = false;
+        if (db.hasFiles()) {
+            List<File> files = db.getFiles();
+            if (files.size() == 1) {
+                success = true;
+                File file = files.get(0);
+                setFile(file);
+            }
+        }
+
+        dragEvent.setDropCompleted(success);
+        dragEvent.consume();
+    }
+
+    private void setFile(File file) {
+        fileLabel.setText(file.getName());
+        fileSelected = true;
+        pdfService.setSourceFile(file);
     }
 }

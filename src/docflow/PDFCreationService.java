@@ -134,7 +134,6 @@ public class PDFCreationService extends Service<File> {
 
         writer.println("indent: yes");
         writer.println("geometry: margin=1in");
-//        writer.println("mainfontoptions: Scale=1");
         writer.println("header-includes:");
         writer.println("\t- \\usepackage{titling}");
         writer.println("\t- \\usepackage{enumitem}");
@@ -151,8 +150,6 @@ public class PDFCreationService extends Service<File> {
         writer.println("\\newcommand{\\tna}[1]{\\title{#1} \\preauthor{} \\author{} \\postauthor{} \\date{\\today} \\maketitle}");
         writer.println("\\newcommand{\\tnd}[1]{\\title{#1} \\author{David Thomson} \\predate{} \\date{} \\postdate{} \\maketitle}");
         writer.println("\\newcommand{\\tnand}[1]{\\title{#1} \\preauthor{} \\author{} \\postauthor{} \\predate{} \\date{} \\postdate{} \\maketitle}");
-//        writer.println("\\newcommand{\\sansfont}{\\renewcommand*\\familydefault{\\sfdefault}}");
-//        writer.println("\\sansfont");
 
         writer.close();
     }
