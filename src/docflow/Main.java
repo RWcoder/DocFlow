@@ -6,9 +6,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
+
 public class Main extends Application {
 
+    public static File initialFile;
+
     public static void main(String[] args) {
+        if (args.length == 1) {
+            String initialFileName = args[0];
+            initialFile = new File(initialFileName);
+        }
         launch(args);
     }
 
@@ -21,5 +29,8 @@ public class Main extends Application {
         primaryStage.setTitle("DocFlow");
         primaryStage.setScene(new Scene(root, 400, 600));
         primaryStage.show();
+        if (initialFile != null) {
+            mainController.setFile(initialFile);
+        }
     }
 }

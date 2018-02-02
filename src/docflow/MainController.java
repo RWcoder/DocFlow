@@ -106,11 +106,12 @@ public class MainController {
             return;
         }
 
+        pdfService.reset();
         consoleTextArea.clear();
-        pdfService.restart();
         createPDFButton.setDisable(true);
         progressIndicator.setVisible(true);
         cancelButton.setVisible(true);
+        pdfService.start();
     }
 
     private void onPDFServiceStopped() {
@@ -193,7 +194,7 @@ public class MainController {
         dragEvent.consume();
     }
 
-    private void setFile(File file) {
+    public void setFile(File file) {
         sourceFile = file;
         fileLabel.setText(file.getName());
         fileLabel.setTextFill(Color.BLACK);
