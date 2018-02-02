@@ -15,6 +15,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -157,7 +159,8 @@ public class MainController {
     }
 
     public void removeCurrentFile(ActionEvent actionEvent) {
-        fileLabel.setText("(Choose a file)");
+        fileLabel.setTextFill(Color.web("#757575"));
+        fileLabel.setText("(Choose or drag a file)");
         fileSelected = false;
         sourceFile = null;
         editFileButton.setDisable(true);
@@ -167,6 +170,7 @@ public class MainController {
         Dragboard db = dragEvent.getDragboard();
         if (db.hasFiles() && !fileSelected) {
             dragEvent.acceptTransferModes(TransferMode.COPY);
+            fileLabel.setStyle("-fx-border-color: black; -fx-background-color: #BDBDBD;");
         } else {
             dragEvent.consume();
         }
@@ -181,6 +185,7 @@ public class MainController {
                 success = true;
                 File file = files.get(0);
                 setFile(file);
+                fileLabel.setStyle("-fx-background-color: #BDBDBD;");
             }
         }
 
@@ -191,6 +196,7 @@ public class MainController {
     private void setFile(File file) {
         sourceFile = file;
         fileLabel.setText(file.getName());
+        fileLabel.setTextFill(Color.BLACK);
         fileSelected = true;
         pdfService.setSourceFile(file);
         editFileButton.setDisable(false);
