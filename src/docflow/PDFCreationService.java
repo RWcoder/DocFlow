@@ -14,6 +14,7 @@ public class PDFCreationService extends Service<File> {
     private File sourceFile;
     private File headerFile;
     private boolean keepTeX = false;
+    private Process pdfCompileProcess;
 
     public PDFCreationService() {
         this.options = new HashMap<>();
@@ -47,8 +48,6 @@ public class PDFCreationService extends Service<File> {
                             texName
                     );
 
-//                    ArrayList<String> pandocArgs = new ArrayList<>(pandocArgsList);
-
                     File sourceDir = sourceFile.getParentFile();
                     String pandocCmd = String.join(" ", pandocArgs);
                     Runtime.getRuntime().exec(pandocCmd, null, sourceDir).waitFor();
@@ -57,10 +56,10 @@ public class PDFCreationService extends Service<File> {
 
                     ProcessBuilder latexProcessBuilder = new ProcessBuilder("pdflatex", texName);
                     latexProcessBuilder.directory(sourceFile.getParentFile());
-                    Process latexProcess = latexProcessBuilder.start();
+                    pdfCompileProcess = latexProcessBuilder.start();
                     final Thread ioThread = new Thread(() -> {
                         try {
-                            final BufferedReader reader = new BufferedReader(new InputStreamReader(latexProcess.getInputStream()));
+                            final BufferedReader reader = new BufferedReader(new InputStreamReader(pdfCompileProcess.getInputStream()));
                             String line;
                             while ((line = reader.readLine()) != null) {
                                 System.out.println(line);
@@ -71,7 +70,7 @@ public class PDFCreationService extends Service<File> {
                         }
                     });
                     ioThread.start();
-                    latexProcess.waitFor();
+                    pdfCompileProcess.waitFor();
 
                     String pdfName = sourceName + ".pdf";
 
@@ -87,31 +86,31 @@ public class PDFCreationService extends Service<File> {
                     return null;
                 }
             }
-
-            private boolean cleanUp() {
-                boolean headerDeleted = headerFile.delete();
-//                boolean headerDeleted = true;
-
-                File dir = sourceFile.getParentFile();
-                File[] junk = {
-                        new File(dir, sourceName + ".aux"),
-                        new File(dir, sourceName + ".log"),
-                        new File(dir, sourceName + ".out")
-                };
-
-                boolean junkDeleted = true;
-                for (File f : junk) {
-                    junkDeleted &= f.delete();
-                }
-
-                if (!keepTeX) {
-                    File texFile = new File(dir, sourceName + ".tex");
-                    junkDeleted &= texFile.delete();
-                }
-
-                return headerDeleted && junkDeleted;
-            }
         };
+    }
+
+
+    private boolean cleanUp() {
+        boolean headerDeleted = headerFile.delete();
+
+        File dir = sourceFile.getParentFile();
+        File[] junk = {
+                new File(dir, sourceName + ".aux"),
+                new File(dir, sourceName + ".log"),
+                new File(dir, sourceName + ".out")
+        };
+
+        boolean junkDeleted = true;
+        for (File f : junk) {
+            junkDeleted &= f.delete();
+        }
+
+        if (!keepTeX) {
+            File texFile = new File(dir, sourceName + ".tex");
+            junkDeleted &= texFile.delete();
+        }
+
+        return headerDeleted && junkDeleted;
     }
 
     private boolean createYAMLFile() throws IOException {
@@ -152,6 +151,16 @@ public class PDFCreationService extends Service<File> {
         writer.println("\\newcommand{\\tnand}[1]{\\title{#1} \\preauthor{} \\author{} \\postauthor{} \\predate{} \\date{} \\postdate{} \\maketitle}");
 
         writer.close();
+    }
+
+    @Override
+    public boolean cancel() {
+        System.out.println("Cancelling...");
+        if (pdfCompileProcess != null) {
+            pdfCompileProcess.destroy();
+        }
+        cleanUp();
+        return super.cancel();
     }
 
     public void setKeepTeX(boolean keepTeX) {

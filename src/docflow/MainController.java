@@ -1,6 +1,5 @@
 package docflow;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,21 +15,15 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import jdk.nashorn.internal.parser.JSONParser;
 
-import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBException;
-import java.awt.Desktop;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
-import java.net.URI;
-import java.net.URL;
 import java.util.List;
 
 public class MainController {
@@ -44,6 +37,7 @@ public class MainController {
     public CheckBox titlePageCheck;
     public TextArea consoleTextArea;
     public Button editFileButton;
+    public Button cancelButton;
 
     private File sourceFile;
     private boolean fileSelected = false;
@@ -54,6 +48,8 @@ public class MainController {
     private void initialize() {
         pdfService = new PDFCreationService();
         pdfService.setOnSucceeded(s -> onPDFCompileSuccess());
+        pdfService.setOnFailed(f -> onPDFServiceStopped());
+        pdfService.setOnCancelled(c -> onPDFServiceStopped());
 
         Console console = new Console(consoleTextArea);
         PrintStream ps = new PrintStream(console, true);
@@ -110,17 +106,21 @@ public class MainController {
             return;
         }
 
+        consoleTextArea.clear();
+        pdfService.restart();
         createPDFButton.setDisable(true);
         progressIndicator.setVisible(true);
-        consoleTextArea.clear();
+        cancelButton.setVisible(true);
+    }
 
-        pdfService.restart();
+    private void onPDFServiceStopped() {
+        createPDFButton.setDisable(false);
+        progressIndicator.setVisible(false);
+        cancelButton.setVisible(false);
     }
 
     private void onPDFCompileSuccess() {
-        createPDFButton.setDisable(false);
-        progressIndicator.setVisible(false);
-
+        onPDFServiceStopped();
         File pdfFile = pdfService.getValue();
         try {
             Desktop.getDesktop().open(pdfFile);
@@ -151,7 +151,7 @@ public class MainController {
         Parent parent = (Parent) loader.load();
         Scene addFontScene = new Scene(parent, 250, 300);
 
-        AddFontController c = (AddFontController) loader.getController();
+        AddFontController c = loader.getController();
         c.setFontHandler(fontHandler);
 
         addFontStage.setScene(addFontScene);
@@ -211,5 +211,9 @@ public class MainController {
             alert.setContentText("Couldn't open file: IOException");
             alert.showAndWait();
         }
+    }
+
+    public void cancel(ActionEvent actionEvent) {
+        pdfService.cancel();
     }
 }
