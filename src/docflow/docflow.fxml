@@ -15,14 +15,14 @@
 <Pane prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="docflow.MainController">
     <Button fx:id="createPDFButton" layoutX="15.0" layoutY="267.0" mnemonicParsing="false" onAction="#onCreatePDFClicked" prefHeight="35.0" prefWidth="123.0" text="Create PDF" />
     <Label layoutX="14.0" layoutY="175.0" text="Font" />
-    <Button layoutX="15.0" layoutY="125.0" maxHeight="35.0" maxWidth="100.0" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" onAction="#openFile" prefHeight="35.0" prefWidth="100.0" text="Choose File" />
-    <Label fx:id="fileLabel" onDragOver="#fileDragOver" onDragDropped="#fileDragDropped" layoutX="15.0" layoutY="15.0" prefHeight="100.0" prefWidth="370.0" text="(Choose a file)" textAlignment="CENTER">
+    <Button layoutX="15.0" layoutY="125.0" maxHeight="35.0" maxWidth="100.0" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" onAction="#openFile" prefHeight="35.0" prefWidth="100.0" text="Choose file" />
+    <Label fx:id="fileLabel" alignment="CENTER" layoutX="15.0" layoutY="15.0" onDragDropped="#fileDragDropped" onDragOver="#fileDragOver" prefHeight="100.0" prefWidth="370.0" text="(Choose a file)" textAlignment="CENTER">
       <font>
          <Font size="16.0" />
       </font></Label>
     <ProgressIndicator fx:id="progressIndicator" layoutX="145.0" layoutY="270.0" prefHeight="30.0" prefWidth="30.0" visible="false" />
-    <ComboBox fx:id="fontPicker" layoutX="14.0" layoutY="191.0" onAction="#onFontPicked" prefHeight="25.0" prefWidth="125.0" />
-    <ListView fx:id="fontSizePicker" layoutX="288.0" layoutY="203.0" maxHeight="71" maxWidth="70">
+    <ComboBox fx:id="fontPicker" layoutX="14.0" layoutY="191.0" onAction="#onFontPicked" prefHeight="25.0" prefWidth="195.0" />
+    <ListView fx:id="fontSizePicker" layoutX="300.0" layoutY="203.0" maxHeight="71" maxWidth="70">
         <items>
             <FXCollections fx:factory="observableArrayList">
                 <String fx:value="10pt" />
@@ -31,15 +31,15 @@
             </FXCollections>
         </items>
     </ListView>
-    <Label layoutX="288.0" layoutY="184.0" text="Font Size" />
-    <CheckBox fx:id="defaultFontCheck" layoutX="150.0" layoutY="167.0" mnemonicParsing="false" onAction="#onDefaultFontChecked" text="Use default font" />
-    <CheckBox fx:id="keepTeXCheck" layoutX="15.0" layoutY="238.0" mnemonicParsing="false" onAction="#setKeepTeX" text="Keep .tex file" />
-    <CheckBox fx:id="titlePageCheck" layoutX="145.0" layoutY="238.0" mnemonicParsing="false" onAction="#onTitlePageCheckChanged" text="Separate title page" />
-    <Button layoutX="150.0" layoutY="191.0" mnemonicParsing="false" onAction="#launchAddFontWindow" prefHeight="25.0" prefWidth="70.0" text="Add font" />
+    <Label layoutX="300.0" layoutY="184.0" text="Font Size" />
+    <CheckBox fx:id="keepTeXCheck" layoutX="15.0" layoutY="222.0" mnemonicParsing="false" onAction="#setKeepTeX" text="Keep .tex file" />
+    <CheckBox fx:id="titlePageCheck" layoutX="15.0" layoutY="245.0" mnemonicParsing="false" onAction="#onTitlePageCheckChanged" text="Separate title page" />
+    <Button layoutX="215.0" layoutY="191.0" mnemonicParsing="false" onAction="#launchAddFontWindow" prefHeight="25.0" prefWidth="70.0" text="Add font" />
     <TextArea fx:id="consoleTextArea" editable="false" layoutX="15.0" layoutY="314.0" prefHeight="270.0" prefWidth="370.0">
       <font>
          <Font name="Courier New" size="10.0" />
       </font>
     </TextArea>
-    <Button onAction="#removeCurrentFile" layoutX="285.0" layoutY="125.0" maxHeight="35.0" maxWidth="100.0" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" text="Remove" />
+    <Button layoutX="285.0" layoutY="125.0" maxHeight="35.0" maxWidth="100.0" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" onAction="#removeCurrentFile" prefHeight="35.0" prefWidth="100.0" text="Remove" />
+    <Button fx:id="editFileButton" disable="true" layoutX="150.0" layoutY="125.0" maxHeight="35.0" maxWidth="100.0" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" onAction="#editFile" prefHeight="35.0" prefWidth="100.0" text="Edit file" />
 </Pane>

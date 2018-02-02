@@ -37,7 +37,7 @@ public class PDFCreationService extends Service<File> {
                     System.out.println("Converting to TeX...");
                     String texName = sourceName + ".tex";
 
-                    List<String> pandocArgsList = Arrays.asList(
+                    List<String> pandocArgs = Arrays.asList(
                             "pandoc",
                             "-f markdown-latex_macros",
                             headerFile.getName(),
@@ -47,13 +47,13 @@ public class PDFCreationService extends Service<File> {
                             texName
                     );
 
-                    ArrayList<String> pandocArgs = new ArrayList<>(pandocArgsList);
+//                    ArrayList<String> pandocArgs = new ArrayList<>(pandocArgsList);
 
                     File sourceDir = sourceFile.getParentFile();
                     String pandocCmd = String.join(" ", pandocArgs);
                     Runtime.getRuntime().exec(pandocCmd, null, sourceDir).waitFor();
 
-                    super.updateMessage("Compiling PDF...");
+                    System.out.println("Compiling PDF...");
 
                     ProcessBuilder latexProcessBuilder = new ProcessBuilder("pdflatex", texName);
                     latexProcessBuilder.directory(sourceFile.getParentFile());
@@ -140,7 +140,7 @@ public class PDFCreationService extends Service<File> {
         writer.println("\t- \\setlist[enumerate]{after=\\noindent}");
         writer.println("\t- \\setlist[itemize]{after=\\noindent}");
 
-        if (font != null) {
+        if (font != null && !font.getUsage().isEmpty()) {
             writer.println("\t- " + font.getUsage());
         }
 

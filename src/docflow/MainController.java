@@ -39,10 +39,11 @@ public class MainController {
     public Label fileLabel;
     public ProgressIndicator progressIndicator;
     public CheckBox keepTeXCheck;
-    public CheckBox defaultFontCheck;
     public CheckBox titlePageCheck;
     public TextArea consoleTextArea;
+    public Button editFileButton;
 
+    private File sourceFile;
     private boolean fileSelected = false;
     private PDFCreationService pdfService;
     private FontHandler fontHandler;
@@ -63,10 +64,11 @@ public class MainController {
         fontSizePicker.getSelectionModel().select(0);
 
         fontHandler = new FontHandler();
-        fontPicker.setItems(fontHandler.getFonts());
-
-        defaultFontCheck.setSelected(true);
-        onDefaultFontChecked(null);
+        ObservableList<Font> fonts = fontHandler.getFonts();
+        Font defaultFont = new Font("Computer Modern (default)", "");
+        fonts.add(0, defaultFont);
+        fontPicker.setItems(fonts);
+        fontPicker.getSelectionModel().select(0);
     }
 
     public void onClose() {
@@ -88,12 +90,6 @@ public class MainController {
         if (file != null) {
             setFile(file);
         }
-    }
-
-    @FXML
-    private void onFontSizePicked(ActionEvent event) {
-        String fontSize = fontSizePicker.getSelectionModel().getSelectedItem();
-        pdfService.setFontSize(fontSize);
     }
 
     @FXML
@@ -135,17 +131,6 @@ public class MainController {
         pdfService.setKeepTeX(keepTeXCheck.isSelected());
     }
 
-    public void onDefaultFontChecked(ActionEvent actionEvent) {
-        if (defaultFontCheck.isSelected()) {
-            fontPicker.setDisable(true);
-            pdfService.clearFont();
-        } else {
-            fontPicker.setDisable(false);
-            Font selectedFont = fontPicker.getSelectionModel().getSelectedItem();
-            pdfService.setFont(selectedFont);
-        }
-    }
-
     public void onTitlePageCheckChanged(ActionEvent actionEvent) {
         if (titlePageCheck.isSelected()) {
             pdfService.setTitlePage(true);
@@ -174,11 +159,13 @@ public class MainController {
     public void removeCurrentFile(ActionEvent actionEvent) {
         fileLabel.setText("(Choose a file)");
         fileSelected = false;
+        sourceFile = null;
+        editFileButton.setDisable(true);
     }
 
     public void fileDragOver(DragEvent dragEvent) {
         Dragboard db = dragEvent.getDragboard();
-        if (db.hasFiles()) {
+        if (db.hasFiles() && !fileSelected) {
             dragEvent.acceptTransferModes(TransferMode.COPY);
         } else {
             dragEvent.consume();
@@ -202,8 +189,21 @@ public class MainController {
     }
 
     private void setFile(File file) {
+        sourceFile = file;
         fileLabel.setText(file.getName());
         fileSelected = true;
         pdfService.setSourceFile(file);
+        editFileButton.setDisable(false);
+    }
+
+    public void editFile(ActionEvent actionEvent) {
+        try {
+            Desktop.getDesktop().open(sourceFile);
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(null);
+            alert.setContentText("Couldn't open file: IOException");
+            alert.showAndWait();
+        }
     }
 }
